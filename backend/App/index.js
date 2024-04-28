@@ -185,11 +185,12 @@ app.post('/landing', (req, res) => {
     const receivedUserEmail = req.body.email;
 
     console.log(req.body, "Done ahh")
+    // console.log(res , 'search')
 
     if (receivedUserEmail === adminEmail) {
 
         ProjectModels.find()
-            .then(projects => res.json( projects))
+            .then(projects => res.json(projects))
             .catch(err => {
                 console.error("Error fetching projects:", err);
                 res.status(500).json({ error: "Internal Server Error" });
@@ -274,26 +275,7 @@ app.post('/api/invite', async (req, res) => {
         registerMail.save(); // Make sure to save inside the forEach loop to save each document
     });
 
-    // const projects = ProjectModels.find().exec();
-    // const RegisterDetails = registerDeatils.find().exec();
 
-    // RegisterDetails.forEach(registerMail => {
-    //     registerMail.project = []
-    //     projects.foreach(assignproject => {
-    //         assignproject.students.forEach(studentMail => {
-    //             if (studentMail.value == registerMail.email) {
-
-    //                 registerMail.project.push({
-    //                     projectTitle: assignproject.projectTitle,
-    //                     projectDesc: assignproject.projectDesc
-    //                 })
-    //             }
-
-    //         })
-
-    //     })
-    // })
-    // registerMail.save()
 
     await newProject.save();
     console.log(newProject)
@@ -315,6 +297,67 @@ app.post('/api/invite', async (req, res) => {
     }
 });
 
+
+app.post('/submitData', async (req, res) => {
+    const { editForm, userData } = req.body;
+    const { name, roll, email } = editForm;
+    const { _id } = userData;
+
+    try {
+        // Attempt to update the document in the database
+        const updateValue = await registerDeatils.updateOne(
+            { _id: _id },
+            {
+                $set: {
+                    name: name,
+                    roll: roll,
+                    email: email
+                }
+            }
+        );
+        // Fetch the updated document
+        const updatedDocument = await registerDeatils.findOne({ _id: _id });
+
+        console.log(updateValue, "Document updated successfully");
+        res.json({ message: 'Data received and updated successfully', updatedDocument });
+
+    } catch (err) {
+        console.error(err, 'Error updating document');
+        res.status(500).json({ error: 'Error updating document' });
+    }
+});
+
+
+// app.delete("/delete", async (req, res) => {
+//     console.log(req.body, "Deleted")
+//     const { _id } = req.body
+//     try {
+//         const deleteData = await ProjectModels.deleteOne({ _id: _id });
+//         console.log(deleteData, "Data Deleted Successfully")
+//         res.json(deleteData)
+//     } catch (error) {
+
+//     }
+// })
+
+app.delete('/delete', async (req, res) => {
+    const { students } = req.body.fproject;
+    console.log(req.body, "Project recevied")
+    console.log(students, "students recevied")
+   
+    // console.log(JSON.stringify(fproject.students, null, 2 , "objects"));
+
+
+    const { _id } = req.body;
+    try {
+        const deleteData = await ProjectModels.deleteOne({ _id: _id });
+        console.log(deleteData, "Data Deleted Successfully");
+        res.json(deleteData);
+    } catch (error) {
+        console.error("Error deleting data:", error);
+        res.status(500).json({ error: "Error deleting data" });
+    }
+});
 
 
 

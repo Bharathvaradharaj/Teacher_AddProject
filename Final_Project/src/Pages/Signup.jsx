@@ -46,7 +46,7 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-     
+
 
         createUserWithEmailAndPassword(auth, Suser.email, Suser.password).then((res) => {
 
@@ -63,7 +63,6 @@ const Signup = () => {
         // Simulate user registration process
         console.log('User registered:', { Suser });
         // After registration, redirect to the login page
-
 
         axios.post("http://localhost:3001/api/register", Suser)
             .then(res => {
@@ -90,12 +89,17 @@ const Signup = () => {
                     alert("An error occurred");
                 }
             });
-
-
-
-
-
     };
+
+    // useEffect(() => {
+
+    //     window.scroll(0, 0)
+
+
+    //     handleSubmit()
+
+    // }, [])
+
 
 
     return (

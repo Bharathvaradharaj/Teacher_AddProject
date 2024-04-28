@@ -11,7 +11,9 @@ import { useContext } from "react"
 const Navbar = ({ logout, setAddproject }) => {
 
 
-    const { addProjectbtn, setaddProjectbtn } = useContext(Data)
+    // const {  } = useContext(Data)
+
+    const { addProjectbtn, setaddProjectbtn, setSearch, setProfile , profile } = useContext(Data)
     // const { userData, setUserData } = useContext(Data);
     const navigate = useNavigate();
 
@@ -29,9 +31,9 @@ const Navbar = ({ logout, setAddproject }) => {
                 setaddProjectbtn(true);
             }
         } else if (registerUserData) {
-            const userData = JSON.parse(registerUserData);
-            setRegisterData(userData);
-            if (userData._id === '662beed601d3735406bb3c70') {
+            const registerData = JSON.parse(registerUserData);
+            setRegisterData(registerData);
+            if (registerData._id === '662beed601d3735406bb3c70') {
                 setaddProjectbtn(true);
             }
         }
@@ -64,13 +66,19 @@ const Navbar = ({ logout, setAddproject }) => {
         navigate('/');
         setaddProjectbtn(false)
         console.log("logout")
+        setSearch("")
+    }
+
+    const handleprofile = () => {
+
+        setProfile(!profile)
     }
 
     return (
 
         <>
             <div>
-                <h2 className="text-2xl font-bold mb-5 text-gray-800 p-10 w-fit">Welcome{(userData && userData.name) || (registerData && registerData.name)}</h2>
+                <h2 className="text-2xl font-bold mb-5 text-gray-800 p-10 w-fit">Welcome {(userData && userData.name) || (registerData && registerData.name)}</h2>
             </div>
 
             {addProjectbtn ?
@@ -79,30 +87,33 @@ const Navbar = ({ logout, setAddproject }) => {
                     <input
                         className="mt-1 px-2 py-3 w-96 border rounded-md border-black outline-none"
                         placeholder="Search Here"
-                        type="search">
+                        type="search"
+                        onChange={(e) => setSearch(e.target.value)}
+                    >
+
                     </input>
-                    <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 ">Search</button>
+                    <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 " >Search</button>
                 </div >)
                 : (<></>)
             }
 
 
-            {addProjectbtn ?
-                (<div className="flex gap-6 px-2 ">
 
+            <div className="flex gap-6 px-2 ">
+                {addProjectbtn ?
 
                     < button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 " onClick={toggleForm}>
                         Add Project
-                    </button>
+                    </button> : " "
+                }
 
+                <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 " onClick={handleprofile}>
 
-                    <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 ">
+                    Project
+                </button>
 
-                        View Project
-                    </button>
+            </div >
 
-                </div >) : (<></>)
-            }
 
             <div className="px-2">
 
