@@ -16,10 +16,10 @@ function App() {
   const [addProjectbtn, setaddProjectbtn] = useState(false)
   const [profile, setProfile] = useState(false)
   const [search, setSearch] = useState("")
-  console.log(userData)
-  console.log(registerData)
+  // console.log(userData)
+  // console.log(registerData)
 
-  console.log(search)
+  // console.log(search)
 
   return (
     <>

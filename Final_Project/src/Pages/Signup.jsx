@@ -61,7 +61,7 @@ const Signup = () => {
 
 
         // Simulate user registration process
-        console.log('User registered:', { Suser });
+        // console.log('User registered:', { Suser });
         // After registration, redirect to the login page
 
         axios.post("http://localhost:3001/api/register", Suser)

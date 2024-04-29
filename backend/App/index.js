@@ -13,13 +13,6 @@ app.use(cors())
 
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: "bharathsara788@gmail.com",
-        pass: "oxgm weoc ivrz yfqd",
-    },
-});
 
 
 
@@ -70,6 +63,12 @@ const ProjectSchema = new Schema({
 });
 
 
+const mailSchema = new Schema({
+
+    email: String,
+    password: String
+})
+
 
 
 
@@ -85,12 +84,17 @@ const registerDeatils = new mongoose.model('registerDeatils', registerSchema)
 // const projectSchema = new mongoose.model('projectSchema', ProjectSchema)
 const ProjectModels = new mongoose.model('ProjectModels', ProjectSchema);
 
+const mailData = new mongoose.model('mailData', mailSchema)
+
+
+
+
 
 /*================ Register User API==================*/
 
 
 app.post('/api/register', async (req, res) => {
-    console.log(req.body, "data")
+    console.log(req.body, "Register Data")
     // res.send({ message: "This email already register" })
     const { name, roll, email, password } = req.body;
     try {
@@ -119,37 +123,7 @@ app.post('/api/register', async (req, res) => {
 
 /*================ Login User API=================*/
 
-// app.post('/api/login', async (req, res) => {
 
-//     console.log(req.body)
-
-//     const { email, password } = req.body
-//     try {
-//         const loginuser = await registerDeatils.findOne({ email: email });
-
-//         if (loginuser) {
-
-//             if (email === loginuser.email) {
-//                 res.send({ message: "Login successfull" })
-
-//             } else {
-
-//                 res.send({ message: "Email not found. Please signUp else" })
-
-//             }
-
-
-//         } else {
-//             res.send({ message: "Email not found. Please signUp" })
-
-//         }
-//     }
-//     catch (err) {
-
-//         res.send(err)
-//     }
-
-// })
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -178,14 +152,14 @@ app.get('/userdata', (req, res) => {
 
 })
 
-const addbtnStatus = true
+
 
 app.post('/landing', (req, res) => {
     const adminEmail = "bharathsara788@gmail.com";
     const receivedUserEmail = req.body.email;
 
     console.log(req.body, "Done ahh")
-    // console.log(res , 'search')
+   
 
     if (receivedUserEmail === adminEmail) {
 
@@ -207,45 +181,6 @@ app.post('/landing', (req, res) => {
 
 
 
-// app.post('/api/invite', async (req, res) => {
-//     console.log('request', req.body)
-//     // res.send(res.body)
-//     const {projectTitle, projectDesc,students} = req.body
-//     // const projectdesc = req.body.projectDesc
-//     // const projecttile = req.body.projectTitle
-//     // const studentsemail = req.body.students
-
-//     new Promise(async (resolve, reject) => {
-//         console.log(students, "Emails")
-//         students.forEach(async (student) => {
-//             console.log("Email sent to", student.value);
-//             try {
-//                 await transporter.sendMail({
-//                     from: "bharathsara788@gmail.com",
-//                     to: student.value,
-//                     subject: projectTitle,
-//                     text: projectDesc
-//                 });
-
-//                 res.send({ message: student.value });
-//             }
-
-//             catch (error) {
-//                 console.error("Error sending email to", student.value, ":", error);
-//             }
-
-//         });
-//     }).then((resolve) => {
-
-//         res.send(resolve)
-//     }).catch((reject) => {
-//         res.send(reject)
-//     })
-
-
-
-// })
-
 app.post('/api/invite', async (req, res) => {
     console.log('request', req.body);
     const { projectTitle, projectDesc, students } = req.body;
@@ -255,30 +190,39 @@ app.post('/api/invite', async (req, res) => {
         projectDesc,
         students
     });
+    await newProject.save();
+    console.log(newProject);
 
-    const projects = await ProjectModels.find().exec();
-    const RegisterDetails = await registerDeatils.find().exec();
+    const projects = await ProjectModels.find();
+    console.log(projects, "Find project");
+    const RegisterDetails = await registerDeatils.find();
+    // console.log(RegisterDetails, "users");
 
-    RegisterDetails.forEach(registerMail => {
+    RegisterDetails.forEach(async (registerMail) => {
         registerMail.project = [];
-        projects.forEach(assignproject => {
-            assignproject.students.forEach(studentMail => {
+        projects.forEach((assignproject) => {
+            assignproject.students.forEach((studentMail) => {
                 if (studentMail.value == registerMail.email) {
                     registerMail.project.push({
                         projectTitle: assignproject.projectTitle,
                         projectDesc: assignproject.projectDesc
                     });
-                    console.log("Data Push that emails", studentMail + "to" + registerMail)
+                    console.log("Data Push that emails", studentMail + "to" + registerMail);
                 }
             });
         });
-        registerMail.save(); // Make sure to save inside the forEach loop to save each document
+        await registerMail.save(); // Make sure to save inside the forEach loop to save each document
     });
 
+    const data = await mailData.find();
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: data[0].toJSON().user,
+            pass: data[0].toJSON().pass
+        },
+    });
 
-
-    await newProject.save();
-    console.log(newProject)
     try {
         for (const student of students) {
             console.log("Email sent to", student.value);
@@ -286,7 +230,9 @@ app.post('/api/invite', async (req, res) => {
                 from: "bharathsara788@gmail.com",
                 to: student.value,
                 subject: projectTitle,
-                text: projectDesc
+                text: ` Hello ${student.label},
+                Your Project has been allocated
+                       ${projectDesc}`
             });
         }
 
@@ -295,13 +241,85 @@ app.post('/api/invite', async (req, res) => {
         console.error("Error sending emails:", error);
         res.status(500).send({ message: "Failed to send emails" });
     }
+
+    console.log(data);
 });
 
+
+//     console.log('request', req.body);
+//     const { projectTitle, projectDesc, students } = req.body;
+
+//     const newProject = new ProjectModels({
+//         projectTitle,
+//         projectDesc,
+//         students
+//     });
+//     await newProject.save();
+//     console.log(newProject)
+
+//     const projects = await ProjectModels.find()
+//     console.log(projects, "Find project")
+//     const RegisterDetails = await registerDeatils.find();
+//     console.log(RegisterDetails, "users")
+
+//     RegisterDetails.forEach(registerMail => {
+//         registerMail.project = [];
+//         projects.forEach(assignproject => {
+//             assignproject.students.forEach(studentMail => {
+//                 if (studentMail.value == registerMail.email) {
+//                     registerMail.project.push({
+//                         projectTitle: assignproject.projectTitle,
+//                         projectDesc: assignproject.projectDesc
+//                     });
+//                     console.log("Data Push that emails", studentMail + "to" + registerMail)
+//                 }
+//             });
+//         });
+//         registerMail.save(); // Make sure to save inside the forEach loop to save each document
+//     });
+
+//     mailData.find().then((data) => {
+//         const transporter = nodemailer.createTransport({
+//             service: "gmail",
+//             auth: {
+//                 user: data[0].toJSON().user,
+//                 pass: data[0].toJSON().pass
+//             },
+//         });
+
+//         try {
+//             for (const student of students) {
+//                 console.log("Email sent to", student.value);
+//                 transporter.sendMail({
+//                     from: "bharathsara788@gmail.com",
+//                     to: student.value,
+//                     subject: projectTitle,
+//                     text: ` Hello ${student.label},
+//                     Your Project has been allocated
+//                            ${projectDesc}`
+//                 });
+//             }
+
+//             res.send({ message: "Emails sent successfully" });
+//         } catch (error) {
+//             console.error("Error sending emails:", error);
+//             res.status(500).send({ message: "Failed to send emails" });
+//         }
+
+//         console.log(data)
+//     }).catch((err) => {
+//         console.log(err);
+//     })
+
+
+// });
 
 app.post('/submitData', async (req, res) => {
     const { editForm, userData } = req.body;
     const { name, roll, email } = editForm;
     const { _id } = userData;
+
+    console.log("SumbitData" , req.body)
 
     try {
         // Attempt to update the document in the database
@@ -328,31 +346,39 @@ app.post('/submitData', async (req, res) => {
 });
 
 
-// app.delete("/delete", async (req, res) => {
-//     console.log(req.body, "Deleted")
-//     const { _id } = req.body
-//     try {
-//         const deleteData = await ProjectModels.deleteOne({ _id: _id });
-//         console.log(deleteData, "Data Deleted Successfully")
-//         res.json(deleteData)
-//     } catch (error) {
-
-//     }
-// })
 
 app.delete('/delete', async (req, res) => {
-    const { students } = req.body.fproject;
+    const { students, projectTitle, projectDesc } = req.body.fproject;
+    const { _id } = req.body;
     console.log(req.body, "Project recevied")
     console.log(students, "students recevied")
-   
-    // console.log(JSON.stringify(fproject.students, null, 2 , "objects"));
+    console.log(_id, "ID recevied")
 
-
-    const { _id } = req.body;
     try {
         const deleteData = await ProjectModels.deleteOne({ _id: _id });
         console.log(deleteData, "Data Deleted Successfully");
-        res.json(deleteData);
+        // res.json(deleteData);
+        for (const studentEmail of students) {
+            const registerDetails = await registerDeatils.findOne({ email: studentEmail.value });
+            if (!registerDetails) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            console.log(registerDetails, 'find email');
+            console.log(studentEmail.value, 'find email');
+
+            const deleteDataUser = await registerDeatils.updateMany(
+                { email: studentEmail.value },
+                { $pull: { project: { projectTitle: projectTitle, projectDesc: projectDesc } } },
+              
+
+            );
+            console.log("Action Status", deleteDataUser, registerDeatils,);
+        }
+
+
+        res.json({ message: "Data deleted and user projects updated successfully" });
+
     } catch (error) {
         console.error("Error deleting data:", error);
         res.status(500).json({ error: "Error deleting data" });

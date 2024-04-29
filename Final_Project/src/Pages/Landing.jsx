@@ -37,10 +37,13 @@ const Landing = () => {
     const [projects, setProjects] = useState([])
 
     const [getUsers, setgetUser] = useState([])
-    const [status, setStatus] = useState(false)
+    const [status, setStatus] = useState(true)
 
     const [addproject, setAddproject] = useState(false)
 
+    const [showProject, setShowProject] = useState(true)
+
+    const [isEditable, setIsEditable] = useState(false);
 
 
 
@@ -67,14 +70,14 @@ const Landing = () => {
     // Click invite function and sent api
 
     const invite = () => {
-        setStatus(true)
+
 
         axios.post("http://localhost:3001/api/invite", project).then((res) => {
-            console.log(res)
+            // console.log(res)
             if (res.status === 200) {
                 alert('Invited Successfully')
                 window.location.reload();
-                setStatus(false)
+                setStatus(true)
             } else {
                 alert("Invited Got Failed")
             }
@@ -87,6 +90,7 @@ const Landing = () => {
 
     // Handle input values
     const handleInputChange = (e) => {
+
         const { name, value } = e.target;
         setProject((prevProject) => ({
             ...prevProject,
@@ -96,16 +100,23 @@ const Landing = () => {
 
     };
 
+    const handleEditForm = () => {
+        setIsEditable(true)
+    }
+
 
 
 
     useEffect(() => {
         window.scroll(0, 0)
-        console.log(location)
+        // console.log(location)
         onDeleteButtonClick()
-        setEditForm(userData.name || registerData.name)
-        setEditForm(userData.roll || registerData.roll)
-        setEditForm(userData.email || registerData.email)
+
+        setEditForm({
+            name: userData.name || registerData.name || "",
+            roll: userData.roll || registerData.roll || "",
+            email: userData.email || registerData.email || "",
+        });
 
         // Fetch userdata
         axios.get("http://localhost:3001/userdata")
@@ -118,9 +129,10 @@ const Landing = () => {
 
         const delayTime = 1000;
         setTimeout(() => {
+
             axios.post("http://localhost:3001/landing", userData || registerData)
                 .then(project => {
-                    console.log(userData || registerData);
+                    //    console .log(userData || registerData);
                     setProjects(project.data);
                     console.log(project)
 
@@ -156,45 +168,90 @@ const Landing = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        setIsEditable(false)
+
+
         axios.post("http://localhost:3001/submitData", sendData)
             .then(res => {
-                console.log(res, 'Success');
-                alert("Details Changed Succesfully")
+                // console.log(res, 'Success');
+                alert("Details Changed Successfully");
+                setIsEditable(false); // Set isEditable to false to make the fields non-editable again
                 setTimeout(() => {
-                    window.location.reload();
+                    // window.location.reload();
+                }, 1000);
 
-                }, 1000)
-                const updatedDocument = res.data.updatedDocument; // Assign the value here
+                const updatedDocument = res.data.updatedDocument;
 
-                // Get userData from localStorage or an empty object if it's not set
+                // Update userData and registerData
                 const userDataString = localStorage.getItem('userData');
                 const userData = userDataString ? JSON.parse(userDataString) : {};
+                userData.name = updatedDocument.name;
+                userData.roll = updatedDocument.roll;
+                userData.email = updatedDocument.email;
+                userData._id = updatedDocument._id;
+                
+                localStorage.setItem('userData', JSON.stringify(userData));
 
-                // Get registerData from localStorage or an empty object if it's not set
                 const registerDataString = localStorage.getItem('registerData');
                 const registerData = registerDataString ? JSON.parse(registerDataString) : {};
-
-                // Update the name property
-                userData.name = updatedDocument.name;
                 registerData.name = updatedDocument.name;
-
-                // Store the updated userData and registerData back to localStorage
-                localStorage.setItem('userData', JSON.stringify(userData));
+                registerData.roll = updatedDocument.roll;
+                registerData.email = updatedDocument.email;
+                registerData._id = updatedDocument._id;
                 localStorage.setItem('registerData', JSON.stringify(registerData));
 
-
-
-                // You can now use updatedDocument here
                 console.log(updatedDocument, "Got it");
-
             })
             .catch((err) => {
                 console.log(err, 'Error');
                 alert("An error occurred");
             });
 
+        // axios.post("http://localhost:3001/submitData", sendData)
+        //     .then(res => {
+        //         console.log(res, 'Success');
+        //         alert("Details Changed Succesfully")
+        //         setIsEditable(true)
+        //         setTimeout(() => {
+        //             window.location.reload();
 
-        // setRegisterData(editForm)
+        //         }, 1000)
+        //         const updatedDocument = res.data.updatedDocument; // Assign the value here
+        //         console.log(updatedDocument, "Data")
+
+        //         // Get userData from localStorage or an empty object if it's not set
+        //         const userDataString = localStorage.getItem('userData');
+        //         const userData = userDataString ? JSON.parse(userDataString) : {};
+
+        //         // Get registerData from localStorage or an empty object if it's not set
+        //         const registerDataString = localStorage.getItem('registerData');
+        //         const registerData = registerDataString ? JSON.parse(registerDataString) : {};
+
+        //         // Update the name property
+        //         userData.name = updatedDocument.name;
+        //         userData.roll = updatedDocument.roll;
+        //         registerData.name = updatedDocument.name;
+        //         registerData.roll = updatedDocument.roll;
+        //         registerData.email = updatedDocument.email
+        //         userData.email = updatedDocument.email
+
+        //         // Store the updated userData and registerData back to localStorage
+        //         localStorage.setItem('userData', JSON.stringify(userData));
+        //         localStorage.setItem('registerData', JSON.stringify(registerData));
+
+
+
+        //         // You can now use updatedDocument here
+        //         console.log(updatedDocument, "Got it");
+
+        //     })
+        //     .catch((err) => {
+        //         console.log(err, 'Error');
+        //         alert("An error occurred");
+        //     });
+
+
+
     };
 
 
@@ -204,6 +261,7 @@ const Landing = () => {
     const handleform = (e) => {
 
         e.preventDefault();
+        setStatus(false);
         invite()
     }
 
@@ -228,10 +286,10 @@ const Landing = () => {
 
 
         try {
-            const response = await axios.delete("http://localhost:3001/delete", { data: { _id: projectId , fproject:project} });
+            const response = await axios.delete("http://localhost:3001/delete", { data: { _id: projectId, fproject: project } });
             console.log(response.data, "Data Deleted Successfully");
             alert("Project Deleted Succesfully")
-            // window.location.reload();
+            window.location.reload();
             // Handle any additional logic after successful deletion
         } catch (error) {
             console.error("Error deleting data:", error);
@@ -247,6 +305,11 @@ const Landing = () => {
     } else {
         document.body.style.overflowY = 'display';
     }
+
+
+
+
+
     return (
         <div>
 
@@ -299,8 +362,8 @@ const Landing = () => {
                             />
 
 
-                            <button type="submit" className="bg-blue-400 text-white p-2 rounded hover:bg-blue-600" >
-                                {status ? "Invited" : "Invite"}
+                            <button type="submit" className={`bg-blue-400 text-white p-2 rounded hover:bg-blue-600 ${!status && 'opacity-50 pointer-events-none'}`} disabled={!status}>
+                                {status ? "Invite" : "Invited"}
                             </button>
                         </form>
                     </div>
@@ -317,7 +380,7 @@ const Landing = () => {
                         <label className="block text-white text-2xl">Name</label>
                         <input
                             type="text"
-                            placeholder="Project Title"
+
                             name="name"
                             onChange={handleformvalue}
                             className="p-2 border rounded w-96"
@@ -325,12 +388,14 @@ const Landing = () => {
                             value={editForm.name}
                             defaultValue={userData.name || registerData.name}
 
+                            onClick={handleEditForm}
+
                         />
 
                         <label className="block text-white text-2xl">Roll No</label>
                         <input
                             type="text"
-                            placeholder="Project Title"
+
                             name="roll"
                             className="p-2 border rounded"
                             required
@@ -342,7 +407,7 @@ const Landing = () => {
                         <label className="block text-white text-2xl">Email</label>
                         <input
                             type="text"
-                            placeholder="Project Title"
+
                             name="email"
                             className="p-2 border rounded"
                             required
@@ -350,16 +415,19 @@ const Landing = () => {
                             onChange={handleformvalue}
                             // defaultValue={userData.email}
                             value={editForm.email}
+                            disabled
                         />
 
-                        <input type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100" onClick={handleSubmit}></input>
+                        <button type="submit" className={`bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 ${!isEditable && 'opacity-50 pointer-events-none'}`} onClick={handleSubmit} disabled={!isEditable}>Submit</button>
 
                     </form>
 
                 </div> : ""
             }
 
-            <div className="blogs-container grid grid-cols-1 md:grid-cols-2 gap-6 container mx-auto px-4 mt-6">
+
+
+            < div className="blogs-container grid grid-cols-1 md:grid-cols-2 gap-6 container mx-auto px-4 mt-6">
                 {projects.filter(project =>
                     project.projectTitle.toLowerCase().includes(search.toLowerCase())
                     || project.projectDesc.toLowerCase().includes(search.toLowerCase())
@@ -383,7 +451,8 @@ const Landing = () => {
                     ))}
             </div>
 
-        </div>
+
+        </div >
     )
 }
 
@@ -391,6 +460,3 @@ const Landing = () => {
 
 
 export default Landing
-
-
-

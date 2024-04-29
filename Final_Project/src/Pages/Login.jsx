@@ -51,7 +51,7 @@ const Login = () => {
                     setUserData(prevState => ({ ...prevState, data: res.data.loginuser, loaded: true }));
                     // setUserData(res.data.loginuser);
                     localStorage.setItem('userData', JSON.stringify(res.data.loginuser));
-                    console.log(res.data.loginuser._id, "Login Data")
+                    // console.log(res.data.loginuser._id, "Login Data")
 
 
 
@@ -67,7 +67,7 @@ const Login = () => {
 
 
         signInWithEmailAndPassword(auth, Luser.email, Luser.password).then((res) => {
-            console.log(res)
+            // console.log(res)
             navigate('/landing');
 
 
@@ -77,7 +77,7 @@ const Login = () => {
         })
 
         // Simulate login process
-        console.log('User logged in:', { Luser });
+        // console.log('User logged in:', { Luser });
 
 
 

@@ -26,14 +26,15 @@ const Navbar = ({ logout, setAddproject }) => {
         if (storedUserData) {
             const userData = JSON.parse(storedUserData);
             setUserData(userData);
-            console.log(userData);
-            if (userData._id === '662beed601d3735406bb3c70') {
+            // console.log(userData);
+            if (userData.email === 'bharathsara788@gmail.com') {
                 setaddProjectbtn(true);
+                console.log("Admin")
             }
         } else if (registerUserData) {
             const registerData = JSON.parse(registerUserData);
             setRegisterData(registerData);
-            if (registerData._id === '662beed601d3735406bb3c70') {
+            if (registerData.email === "bharathsara788@gmail.com") {
                 setaddProjectbtn(true);
             }
         }
@@ -54,7 +55,7 @@ const Navbar = ({ logout, setAddproject }) => {
     const toggleForm = () => {
         setShowForm(!showForm);
         setAddproject(!showForm);
-        console.log(showForm)
+        // console.log(showForm)
     };
 
 
@@ -92,7 +93,7 @@ const Navbar = ({ logout, setAddproject }) => {
                     >
 
                     </input>
-                    <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 " >Search</button>
+
                 </div >)
                 : (<></>)
             }
@@ -109,7 +110,7 @@ const Navbar = ({ logout, setAddproject }) => {
 
                 <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-100 " onClick={handleprofile}>
 
-                    Project
+                   Edit Project
                 </button>
 
             </div >
