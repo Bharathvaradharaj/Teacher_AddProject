@@ -101,7 +101,7 @@ const mailData = new mongoose.model('mailData', mailSchema)
 
 
 app.get("/", (req, res) => {
-    res.json("Connected");
+    res.send("Connected");
 })
 
 
