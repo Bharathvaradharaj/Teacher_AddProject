@@ -179,7 +179,7 @@ const Landing = () => {
                 setTimeout(() => {
                     // window.location.reload();
                 }, 1000);
-
+                console.log(res.data)
                 const updatedDocument = res.data.updatedDocument;
 
                 // Update userData and registerData
@@ -189,7 +189,7 @@ const Landing = () => {
                 userData.roll = updatedDocument.roll;
                 userData.email = updatedDocument.email;
                 userData._id = updatedDocument._id;
-                
+
                 localStorage.setItem('userData', JSON.stringify(userData));
 
                 const registerDataString = localStorage.getItem('registerData');
@@ -207,48 +207,6 @@ const Landing = () => {
                 alert("An error occurred");
             });
 
-        // axios.post("http://localhost:3001/submitData", sendData)
-        //     .then(res => {
-        //         console.log(res, 'Success');
-        //         alert("Details Changed Succesfully")
-        //         setIsEditable(true)
-        //         setTimeout(() => {
-        //             window.location.reload();
-
-        //         }, 1000)
-        //         const updatedDocument = res.data.updatedDocument; // Assign the value here
-        //         console.log(updatedDocument, "Data")
-
-        //         // Get userData from localStorage or an empty object if it's not set
-        //         const userDataString = localStorage.getItem('userData');
-        //         const userData = userDataString ? JSON.parse(userDataString) : {};
-
-        //         // Get registerData from localStorage or an empty object if it's not set
-        //         const registerDataString = localStorage.getItem('registerData');
-        //         const registerData = registerDataString ? JSON.parse(registerDataString) : {};
-
-        //         // Update the name property
-        //         userData.name = updatedDocument.name;
-        //         userData.roll = updatedDocument.roll;
-        //         registerData.name = updatedDocument.name;
-        //         registerData.roll = updatedDocument.roll;
-        //         registerData.email = updatedDocument.email
-        //         userData.email = updatedDocument.email
-
-        //         // Store the updated userData and registerData back to localStorage
-        //         localStorage.setItem('userData', JSON.stringify(userData));
-        //         localStorage.setItem('registerData', JSON.stringify(registerData));
-
-
-
-        //         // You can now use updatedDocument here
-        //         console.log(updatedDocument, "Got it");
-
-        //     })
-        //     .catch((err) => {
-        //         console.log(err, 'Error');
-        //         alert("An error occurred");
-        //     });
 
 
 
@@ -402,6 +360,7 @@ const Landing = () => {
                             value={editForm.roll}
                             defaultValue={userData.roll || registerData.roll}
                             onChange={handleformvalue}
+                            onClick={handleEditForm}
 
                         />
                         <label className="block text-white text-2xl">Email</label>

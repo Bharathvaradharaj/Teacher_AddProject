@@ -6,7 +6,14 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-app.use(cors())
+app.use(cors(
+
+    // {
+    //     origin: ["https://deploy-mern-frontend.vercel.app"],
+    //     methods: ["POST", "GET"],
+    //     credentials: true
+    // }
+))
 
 
 
@@ -18,7 +25,7 @@ const nodemailer = require("nodemailer");
 
 /*===================== mongoose setup===============*/
 
-mongoose.connect("mongodb://127.0.0.1:27017/registerData", {
+mongoose.connect("mongodb+srv://bharathsara788:vrdXPAZTjWb3R3KM@cluster0.wvz6pnd.mongodb.net/registerData?retryWrites=true&w=majority&appName=Cluster0", {
 
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -93,6 +100,11 @@ const mailData = new mongoose.model('mailData', mailSchema)
 /*================ Register User API==================*/
 
 
+app.get("/", (req, res) => {
+    res.json("Connected");
+})
+
+
 app.post('/api/register', async (req, res) => {
     console.log(req.body, "Register Data")
     // res.send({ message: "This email already register" })
@@ -159,7 +171,7 @@ app.post('/landing', (req, res) => {
     const receivedUserEmail = req.body.email;
 
     console.log(req.body, "Done ahh")
-   
+
 
     if (receivedUserEmail === adminEmail) {
 
@@ -246,7 +258,7 @@ app.post('/api/invite', async (req, res) => {
 });
 
 
-//     console.log('request', req.body);
+
 //     const { projectTitle, projectDesc, students } = req.body;
 
 //     const newProject = new ProjectModels({
@@ -319,7 +331,7 @@ app.post('/submitData', async (req, res) => {
     const { name, roll, email } = editForm;
     const { _id } = userData;
 
-    console.log("SumbitData" , req.body)
+    console.log("SumbitData", req.body)
 
     try {
         // Attempt to update the document in the database
@@ -370,7 +382,7 @@ app.delete('/delete', async (req, res) => {
             const deleteDataUser = await registerDeatils.updateMany(
                 { email: studentEmail.value },
                 { $pull: { project: { projectTitle: projectTitle, projectDesc: projectDesc } } },
-              
+
 
             );
             console.log("Action Status", deleteDataUser, registerDeatils,);
