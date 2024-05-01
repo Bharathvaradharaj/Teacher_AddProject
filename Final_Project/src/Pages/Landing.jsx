@@ -119,7 +119,7 @@ const Landing = () => {
         });
 
         // Fetch userdata
-        axios.get("http://localhost:3001/userdata")
+        axios.get("https://teacher-add-project.vercel.app/userdata")
             .then(response => {
                 setgetUser(response.data);
             })
