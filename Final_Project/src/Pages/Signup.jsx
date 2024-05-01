@@ -66,7 +66,7 @@ const Signup = () => {
         // console.log('User registered:', { Suser });
         // After registration, redirect to the login page
 
-        axios.post("https://teacher-add-project.vercel.app/api/register", Suser)
+        axios.post("https://teacher-add-project-api.vercel.app/api/register", Suser)
             .then(res => {
                 if (res.status === 200) {
                     // Registration successful
