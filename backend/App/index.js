@@ -6,14 +6,14 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-app.use(cors(
+app.use(cors({
+    origin:"https://teacher-add-project-frontend.vercel.app",
+    methods: ["POST", "GET"],
+    credentials: true
+}));
 
-    {
-        origin: "https://teacher-add-project-frontend.vercel.app",
-        methods: ["POST", "GET"],
-        credentials: true
-    }
-))
+// Handle preflight requests
+app.options('*', cors());
 
 
 
