@@ -72,7 +72,7 @@ const Landing = () => {
     const invite = () => {
 
 
-        axios.post("https://teacher-add-project.vercel.app/api/invite", project).then((res) => {
+        axios.post("https://teacher-add-project-api.vercel.app/p/api/invite", project).then((res) => {
             // console.log(res)
             if (res.status === 200) {
                 alert('Invited Successfully')
@@ -119,7 +119,7 @@ const Landing = () => {
         });
 
         // Fetch userdata
-        axios.get("https://teacher-add-project.vercel.app/userdata")
+        axios.get("https://teacher-add-project-api.vercel.app/userdata")
             .then(response => {
                 setgetUser(response.data);
             })
@@ -130,7 +130,7 @@ const Landing = () => {
         const delayTime = 1000;
         setTimeout(() => {
 
-            axios.post("https://teacher-add-project.vercel.app/landing", userData || registerData)
+            axios.post("https://teacher-add-project-api.vercel.app/landing", userData || registerData)
                 .then(project => {
                     //    console .log(userData || registerData);
                     setProjects(project.data);
@@ -171,7 +171,7 @@ const Landing = () => {
         setIsEditable(false)
 
 
-        axios.post("https://teacher-add-project.vercel.app/submitData", sendData)
+        axios.post("https://teacher-add-project-api.vercel.app/submitData", sendData)
             .then(res => {
                 // console.log(res, 'Success');
                 alert("Details Changed Successfully");
@@ -244,7 +244,7 @@ const Landing = () => {
 
 
         try {
-            const response = await axios.delete("https://teacher-add-project.vercel.app/delete", { data: { _id: projectId, fproject: project } });
+            const response = await axios.delete("https://teacher-add-project-api.vercel.app/delete", { data: { _id: projectId, fproject: project } });
             console.log(response.data, "Data Deleted Successfully");
             alert("Project Deleted Succesfully")
             window.location.reload();
