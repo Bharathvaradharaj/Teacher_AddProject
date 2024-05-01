@@ -72,7 +72,7 @@ const Landing = () => {
     const invite = () => {
 
 
-        axios.post("http://localhost:3001/api/invite", project).then((res) => {
+        axios.post("https://teacher-add-project.vercel.app/api/invite", project).then((res) => {
             // console.log(res)
             if (res.status === 200) {
                 alert('Invited Successfully')
@@ -130,7 +130,7 @@ const Landing = () => {
         const delayTime = 1000;
         setTimeout(() => {
 
-            axios.post("http://localhost:3001/landing", userData || registerData)
+            axios.post("https://teacher-add-project.vercel.app/landing", userData || registerData)
                 .then(project => {
                     //    console .log(userData || registerData);
                     setProjects(project.data);
@@ -171,7 +171,7 @@ const Landing = () => {
         setIsEditable(false)
 
 
-        axios.post("http://localhost:3001/submitData", sendData)
+        axios.post("https://teacher-add-project.vercel.app/submitData", sendData)
             .then(res => {
                 // console.log(res, 'Success');
                 alert("Details Changed Successfully");
@@ -244,7 +244,7 @@ const Landing = () => {
 
 
         try {
-            const response = await axios.delete("http://localhost:3001/delete", { data: { _id: projectId, fproject: project } });
+            const response = await axios.delete("https://teacher-add-project.vercel.app/delete", { data: { _id: projectId, fproject: project } });
             console.log(response.data, "Data Deleted Successfully");
             alert("Project Deleted Succesfully")
             window.location.reload();
