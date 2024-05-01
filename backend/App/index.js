@@ -5,12 +5,16 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+const corsOptions = {
+  origin: ["https://teacher-add-project-frontend.vercel.app"],
+  methods: ["POST", "GET", "PUT"], // Add PUT method
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"], // Allow additional headers
+  exposedHeaders: ["Content-Length", "Authorization"], // Expose additional headers
+};
 
-app.use(cors({
-    origin:["https://teacher-add-project-frontend.vercel.app"],
-    methods: ["POST", "GET"],
-    credentials: true
-}));
+
+app.use(cors(corsOptions));
 
 // // Handle preflight requests
 // app.options('*', cors());
