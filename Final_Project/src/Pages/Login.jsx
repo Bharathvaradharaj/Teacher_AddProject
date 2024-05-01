@@ -44,7 +44,7 @@ const Login = () => {
     const handleLogin = (e) => {
         e.preventDefault();
 
-        axios.post("http://localhost:3001/api/login", Luser)
+        axios.post("https://teacher-add-project.vercel.app/api/login", Luser)
             .then((res) => {
                 if (res.status === 200) {
                     alert(res.data.message);
