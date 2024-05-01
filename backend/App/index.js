@@ -12,8 +12,8 @@ app.use(cors({
     credentials: true
 }));
 
-// Handle preflight requests
-app.options('*', cors());
+// // Handle preflight requests
+// app.options('*', cors());
 
 
 
