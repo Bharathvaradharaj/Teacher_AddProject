@@ -15,7 +15,7 @@ app.use(cors(
     // }
 ))
 
-
+ 
 
 
 const nodemailer = require("nodemailer");
@@ -25,7 +25,7 @@ const nodemailer = require("nodemailer");
 
 /*===================== mongoose setup===============*/
 
-mongoose.connect("mongodb+srv://bharathsara788:vrdXPAZTjWb3R3KM@cluster0.wvz6pnd.mongodb.net/registerData?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect("mongodb://localhost:27017/", {
 
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -101,7 +101,7 @@ const mailData = new mongoose.model('mailData', mailSchema)
 
 
 app.get("/", (req, res) => {
-    res.json("Connected");
+    res.send("Connected");
 })
 
 
