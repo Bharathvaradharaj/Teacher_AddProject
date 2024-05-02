@@ -6,14 +6,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-app.use(cors(
 
-    // {
-    //     origin: ["https://deploy-mern-frontend.vercel.app"],
-    //     methods: ["POST", "GET"],
-    //     credentials: true
-    // }
-))
+
+app.use(cors());
+
+// // Handle preflight requests
+// app.options('*', cors());
 
  
 
@@ -25,7 +23,7 @@ const nodemailer = require("nodemailer");
 
 /*===================== mongoose setup===============*/
 
-mongoose.connect("mongodb://localhost:27017/", {
+mongoose.connect("mongodb://127.0.0.1:27017/registerData", {
 
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -100,9 +98,9 @@ const mailData = new mongoose.model('mailData', mailSchema)
 /*================ Register User API==================*/
 
 
-app.get("/", (req, res) => {
-    res.send("Connected");
-})
+// app.get("/", (req, res) => {
+//     res.send("Connected");
+// })
 
 
 app.post('/api/register', async (req, res) => {

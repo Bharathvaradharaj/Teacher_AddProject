@@ -8,6 +8,8 @@ import axios from "axios"
 import Data from "../ContexApi"
 
 const Signup = () => {
+
+//  axios.defaults.withCredentials = true;
     const [Suser, setSuser] = useState({
         name: "",
         roll: "",
