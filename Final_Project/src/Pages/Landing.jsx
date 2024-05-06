@@ -177,7 +177,7 @@ const Landing = () => {
                 alert("Details Changed Successfully");
                 setIsEditable(false); // Set isEditable to false to make the fields non-editable again
                 setTimeout(() => {
-                    // window.location.reload();
+                    window.location.reload();
                 }, 1000);
                 console.log(res.data)
                 const updatedDocument = res.data.updatedDocument;

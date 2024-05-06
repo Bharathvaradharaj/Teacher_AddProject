@@ -93,14 +93,7 @@ const Signup = () => {
             });
     };
 
-    // useEffect(() => {
 
-    //     window.scroll(0, 0)
-
-
-    //     handleSubmit()
-
-    // }, [])
 
 
 

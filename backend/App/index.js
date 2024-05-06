@@ -10,10 +10,6 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(cors());
 
-// // Handle preflight requests
-// app.options('*', cors());
-
- 
 
 
 const nodemailer = require("nodemailer");
