@@ -1,10 +1,14 @@
 Student Project Manager
+
+
 Tools:
 React.js
 Node.js
 MongoDB
 Firebase
 Features:
+
+
 1)Sign up and login data are configured to Firebase and MongoDB.
 2) Admin credentials: Email: bharathsara788@gmail.com, Password: 123456.
 3)Only admin has access to add projects, view all projects, and use the search field.
