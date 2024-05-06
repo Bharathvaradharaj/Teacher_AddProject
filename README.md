@@ -6,8 +6,9 @@ React.js
 Node.js
 MongoDB
 Firebase
-Features:
 
+
+Features: 
 
 1)Sign up and login data are configured to Firebase and MongoDB.
 2) Admin credentials: Email: bharathsara788@gmail.com, Password: 123456.
